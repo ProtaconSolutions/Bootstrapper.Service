@@ -45,6 +45,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reactive.Core, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.3.1.0\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -84,10 +85,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceFolder.cs" />
     <Compile Include="ServiceLoaderApp.cs" />
-    <Compile Include="ServiceUpdaterApp.cs" />
+    <Compile Include="Updaters\ServiceUpdaterAppLocalFolder.cs" />
+    <Compile Include="Updaters\ServiceUpdaterAppWeb.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ShadowDomainApplication.cs" />
-    <Compile Include="UpdateSniffer.cs" />
+    <Compile Include="UpdateSnifferLocal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

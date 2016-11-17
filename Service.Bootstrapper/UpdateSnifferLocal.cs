@@ -3,7 +3,7 @@ using System.Reactive.Subjects;
 
 namespace Bootstrapper.Service
 {
-    public class UpdateSniffer
+    public class UpdateSnifferLocal
     {
         public IObservable<PackageSourceInformation> SniffSniff()
         {

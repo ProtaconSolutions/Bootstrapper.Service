@@ -2,11 +2,11 @@
 
 namespace Bootstrapper.Service
 {
-    public class ServiceUpdaterApp : IDisposable
+    public class ServiceUpdaterAppWeb : IDisposable
     {
         private IDisposable _app;
 
-        public ServiceUpdaterApp()
+        public ServiceUpdaterAppWeb()
         {
             _app = null;
         }

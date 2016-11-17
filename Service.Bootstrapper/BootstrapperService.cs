@@ -1,11 +1,13 @@
-﻿using NLog;
+﻿using System;
+using Bootstrapper.Service.Updaters;
+using NLog;
 
 namespace Bootstrapper.Service
 {
     public class BootstrapperService
     {
         private ServiceLoaderApp _currentApp;
-        private ServiceUpdaterApp _updaterApp;
+        private IDisposable _updaterApp;
         private readonly Configuration _configuration;
         private readonly ILogger _logger;
 
@@ -20,7 +22,7 @@ namespace Bootstrapper.Service
             _currentApp?.Dispose();
             _updaterApp?.Dispose();
             _currentApp = new ServiceLoaderApp(_configuration, _logger);
-            _updaterApp = new ServiceUpdaterApp();
+            _updaterApp = new ServiceUpdaterAppLocalFolder(_configuration, _logger);
         }
 
         public void Stop()
