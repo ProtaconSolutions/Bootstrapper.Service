@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 
 namespace Bootstrapper.Service
 {
@@ -8,35 +9,42 @@ namespace Bootstrapper.Service
     {
         private readonly CancellationTokenSource _cts;
 
-        private ShadowDomainApplication(string path)
+        private ShadowDomainApplication(string path, ILogger startupLogger)
         {
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
             Task.Run(() =>
             {
-                AppDomainSetup setup = new AppDomainSetup
+                try
                 {
-                    ApplicationName = "CustomServiceLoader.LoadedAssembly",
-                    ShadowCopyFiles = "true"
-                };
+                    AppDomainSetup setup = new AppDomainSetup
+                    {
+                        ApplicationName = "CustomServiceLoader.LoadedAssembly",
+                        ShadowCopyFiles = "true"
+                    };
 
-                AppDomain domain = AppDomain.CreateDomain(
-                    "CustomServiceLoader.LoadedAssembly",
-                    AppDomain.CurrentDomain.Evidence,
-                    setup);
+                    AppDomain domain = AppDomain.CreateDomain(
+                        "CustomServiceLoader.LoadedAssembly",
+                        AppDomain.CurrentDomain.Evidence,
+                        setup);
 
-                using (token.Register(
-                    () => AppDomain.Unload(domain)))
+                    using (token.Register(
+                        () => AppDomain.Unload(domain)))
+                    {
+                        domain.ExecuteAssembly(path);
+                    }
+                }
+                catch (Exception ex)
                 {
-                    domain.ExecuteAssembly(path);
+                    startupLogger.Error(ex);
                 }
             }, _cts.Token);
         }
 
-        public static IDisposable StartApplication(string path)
+        public static IDisposable StartApplication(string path, ILogger startupLogger)
         {
-            return new ShadowDomainApplication(path);
+            return new ShadowDomainApplication(path, startupLogger);
         }
 
         public void Dispose()

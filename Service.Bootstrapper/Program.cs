@@ -1,5 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Threading;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+using Topshelf;
 
 namespace Bootstrapper.Service
 {
@@ -9,27 +16,58 @@ namespace Bootstrapper.Service
         [STAThread]
         static void Main(string[] args)
         {
-            string startupPath = @"C:\temp\ConsoleApplication2.exe";
+            Configuration.Create().Match(
+                some: ConfigureService,
+                none: error =>
+                {
+                    var assemblyFolder = Path.GetDirectoryName(
+                        Assembly.GetExecutingAssembly().Location);
+                    File.WriteAllText($"{assemblyFolder}\\configuration_failures.log", error.Message);
+                });
+        }
 
-            var watcher = new ServiceFolder()
-                .ExecutablesChanged(startupPath);
+        private static void NlogConfiguration(Configuration config)
+        {
+            var loggerConfig = new LoggingConfiguration();
 
-            IDisposable app = null;
+            var consoleTarget = new ColoredConsoleTarget();
+            loggerConfig.AddTarget("console", new ColoredConsoleTarget());
 
-            watcher.Subscribe(path =>
+            var fileTarget = new FileTarget()
             {
-                Console.WriteLine("Received update, unloading exising application if any.");
-                app?.Dispose();
+                FileName = config.BootstrapperLogPath
+            };
 
-                Console.WriteLine($"Loading new application from '{path}'");
-                app = ShadowDomainApplication.StartApplication(path);
-            },
-            completed => app?.Dispose());
+            loggerConfig.AddTarget("file", fileTarget);
 
-            while (true)
+            loggerConfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
+            loggerConfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, fileTarget));
+
+            LogManager.ThrowExceptions = true;
+            LogManager.Configuration = loggerConfig;
+            LogManager.ThrowExceptions = true;
+        }
+
+        private static void ConfigureService(Configuration config)
+        {
+            NlogConfiguration(config);
+
+            var logger = LogManager.GetLogger("Bootstrapper.Service");
+
+            HostFactory.Run(serviceConfig =>
             {
-                Thread.Sleep(1000);
-            }
+                serviceConfig.UseNLog(logger.Factory);
+
+                serviceConfig.SetServiceName("Bootstrapper.Service");
+
+                serviceConfig.Service<BootstrapperService>(service =>
+                {
+                    service.ConstructUsing(() => new BootstrapperService(config, logger));
+                    service.WhenStarted(x => x.Start());
+                    service.WhenStopped(x => x.Stop());
+                    service.WhenShutdown(x => x.ShutDown());
+                });
+            });
         }
     }
 }

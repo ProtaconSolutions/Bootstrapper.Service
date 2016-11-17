@@ -3,20 +3,26 @@ using System.IO;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace Service.Bootstrapper
+namespace Bootstrapper.Service
 {
     public class ServiceFolder : IDisposable
     {
+        private readonly Configuration _configuration;
         private FileSystemWatcher _watcher;
         private BehaviorSubject<string> _observable;
 
-        public IObservable<string> ExecutablesChanged(string path)
+        public ServiceFolder(Configuration configuration)
         {
-            _observable = new BehaviorSubject<string>(path);
+            _configuration = configuration;
+        }
+
+        public IObservable<string> ExecutablesChanged()
+        {
+            _observable = new BehaviorSubject<string>(_configuration.StartupFile);
 
             _watcher = new FileSystemWatcher
             {
-                Path = Path.GetDirectoryName(path),
+                Path = _configuration.ServicePath,
                 NotifyFilter = NotifyFilters.LastWrite,
                 EnableRaisingEvents = true
             };
@@ -26,7 +32,7 @@ namespace Service.Bootstrapper
                 if (!(fileInfo.FullPath.EndsWith(".exe") || fileInfo.FullPath.EndsWith(".dll") || fileInfo.FullPath.EndsWith(".config")))
                     return;
 
-                _observable.OnNext(path);
+                _observable.OnNext(_configuration.StartupFile);
             };
 
             return _observable
