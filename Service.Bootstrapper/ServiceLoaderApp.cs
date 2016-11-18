@@ -18,7 +18,7 @@ namespace Bootstrapper.Service
 
             _watcher.Subscribe(path =>
                 {
-                    logger.Info("Received update, unloading exising application if any.");
+                    logger.Info("Unloading exising application if any.");
                     _app?.Dispose();
 
                     logger.Info($"Loading new application from '{path}'");

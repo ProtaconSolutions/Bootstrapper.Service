@@ -18,7 +18,7 @@ namespace Bootstrapper.Service
             ServicePath = Path.Combine(Path.GetDirectoryName(
                 Assembly.GetExecutingAssembly().Location), "serviceBin");
 
-            StartupFile = Path.Combine(ServicePath, "ConsoleApplication2.exe");
+            StartupFile = Path.Combine(ServicePath, "Baja.Client.Console.exe");
 
             if (!Directory.Exists(ServicePath))
                 Directory.CreateDirectory(ServicePath);
