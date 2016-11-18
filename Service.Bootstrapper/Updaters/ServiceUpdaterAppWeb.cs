@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Security.Cryptography;
 using Bootstrapper.Service.Util;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using RestSharp;
 using RestSharp.Extensions;
@@ -15,19 +16,12 @@ namespace Bootstrapper.Service.Updaters
     public class ServiceUpdaterAppWeb : IDisposable
     {
         private readonly ILogger _logger;
-
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly IObservable<long> _interval;
-
         private readonly IDisposable _routine;
 
         public ServiceUpdaterAppWeb(Configuration configuration, ILogger logger)
         {
             _logger = logger;
-
-            _interval = Observable.Interval(TimeSpan.FromSeconds(30));
-
-            _routine = _interval.Subscribe(_ =>
+            _routine = Observable.Interval(TimeSpan.FromSeconds(30)).ObserveOn(Scheduler.Default).Subscribe(_ =>
             {
                 try
                 {
@@ -44,13 +38,13 @@ namespace Bootstrapper.Service.Updaters
             if (!configuration.RemoteServicePackageFile.StartsWith("http"))
                 throw new ArgumentException(nameof(configuration.RemoteServicePackageFile));
 
-            var currentSum = Utilities.CalculateMd5(configuration.CurrentServicePackageFile);
-            var remoteSum = GetMd5FromHeaders(configuration) ?? GetMd5FromPackage(configuration) ?? "NOT_FOUND";
+            var currentVersionIdentifier = GetLocalVersionIdentifier(configuration) ?? "NO_CURRENT";
+            var remoteVersionIdentifier = GetRemoteVersionIdentifier(configuration) ?? "NO_REMOTE";
 
             _logger.Debug(
-                $"Checking for updates, local '{configuration.CurrentServicePackageFile}[{currentSum}]' against '{configuration.RemoteServicePackageFile}[{remoteSum}]'");
+                $"Checking for updates, local '{configuration.CurrentServicePackageFile}[{currentVersionIdentifier}]' against '{configuration.RemoteServicePackageFile}[{remoteVersionIdentifier}]'");
 
-            if (currentSum == remoteSum)
+            if (currentVersionIdentifier == remoteVersionIdentifier)
                 return;
 
             if (File.Exists(configuration.CurrentServicePackageFile))
@@ -65,6 +59,16 @@ namespace Bootstrapper.Service.Updaters
 
             new DirectoryInfo(configuration.ServicePath).Empty();
             ZipFile.ExtractToDirectory(configuration.CurrentServicePackageFile, configuration.ServicePath);
+
+            WriteCurrentVersionMeta(configuration, remoteVersionIdentifier);
+        }
+
+        private void WriteCurrentVersionMeta(Configuration configuration, string versionIdentifier)
+        {
+            File.WriteAllText(configuration.WebUpdaterMetaFile, JsonConvert.SerializeObject(new
+            {
+                CurrentVersionIdentifier = versionIdentifier
+            }));
         }
 
         private void DownloadNewPackage(Configuration configuration)
@@ -73,20 +77,22 @@ namespace Bootstrapper.Service.Updaters
             client.DownloadData(new RestRequest("")).SaveAs(configuration.CurrentServicePackageFile);
         }
 
-        private string GetMd5FromHeaders(Configuration configuration)
+        private string GetRemoteVersionIdentifier(Configuration configuration)
         {
             var response = new RestClient(configuration.RemoteServicePackageFile)
                 .Execute(new RestRequest("", Method.HEAD));
 
-            if (response.Headers.Any(x => x.Name == "md5"))
-                return response.Headers.Single(x => x.Name == "md5").Value.ToString();
-
-            return null;
+            return $"{response.Headers.Single(x => x.Name == "Content-Length").Value}_{response.Headers.Single(x => x.Name == "Last-Modified").Value}";
         }
 
-        private string GetMd5FromPackage(Configuration configuration)
+        private string GetLocalVersionIdentifier(Configuration configuration)
         {
-            return null;
+            if (!File.Exists(configuration.WebUpdaterMetaFile))
+                return "";
+
+            dynamic meta = JObject.Parse(File.ReadAllText(configuration.WebUpdaterMetaFile));
+
+            return meta.CurrentVersionIdentifier ?? "";
         }
 
         public void Dispose()

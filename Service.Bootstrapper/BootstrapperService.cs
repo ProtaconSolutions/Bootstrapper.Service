@@ -22,7 +22,7 @@ namespace Bootstrapper.Service
             _currentApp?.Dispose();
             _updaterApp?.Dispose();
             _currentApp = new ServiceLoaderApp(_configuration, _logger);
-            _updaterApp = new ServiceUpdaterAppLocalFolder(_configuration, _logger);
+            _updaterApp = new ServiceUpdateFactory(_configuration, _logger).Create();
         }
 
         public void Stop()

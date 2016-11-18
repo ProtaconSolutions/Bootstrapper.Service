@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
@@ -9,17 +10,16 @@ namespace Bootstrapper.Service
     {
         private readonly Configuration _configuration;
         private FileSystemWatcher _watcher;
-        private BehaviorSubject<string> _observable;
+        private readonly BehaviorSubject<string> _observable;
 
         public ServiceFolder(Configuration configuration)
         {
             _configuration = configuration;
+            _observable = new BehaviorSubject<string>(_configuration.StartupFile);
         }
 
         public IObservable<string> ExecutablesChanged()
         {
-            _observable = new BehaviorSubject<string>(_configuration.StartupFile);
-
             _watcher = new FileSystemWatcher
             {
                 Path = _configuration.ServicePath,
@@ -36,7 +36,8 @@ namespace Bootstrapper.Service
             };
 
             return _observable
-                .Throttle(TimeSpan.FromSeconds(10));
+                .ObserveOn(Scheduler.Default)
+                .Throttle(TimeSpan.FromSeconds(20));
         }
 
         public void Dispose()

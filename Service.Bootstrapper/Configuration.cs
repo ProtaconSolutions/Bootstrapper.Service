@@ -33,10 +33,14 @@ namespace Bootstrapper.Service
                 Directory.CreateDirectory(servicePackageFolder);
 
             CurrentServicePackageFile = servicePackageFolder + @"\\current.zip";
-            RemoteServicePackageFile = @"C:\temp\new.zip";
+            RemoteServicePackageFile = @"https://savpekprotaconcommon.blob.core.windows.net/dev/consoleapplication1.zip";
+
+            WebUpdaterMetaFile = servicePackageFolder + @"\\web.updater.meta.json";
         }
 
-    public static Option<Configuration, Exception> Create()
+        public string WebUpdaterMetaFile { get; private set; }
+
+        public static Option<Configuration, Exception> Create()
         {
             try
             {

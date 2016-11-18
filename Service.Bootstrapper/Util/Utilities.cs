@@ -19,5 +19,21 @@ namespace Bootstrapper.Service.Util
                 }
             }
         }
+
+        public static DateTime LastModified(string file)
+        {
+            if (!File.Exists(file))
+                return DateTime.MinValue;
+
+            return File.GetCreationTimeUtc(file);
+        }
+
+        public static long FileLength(string file)
+        {
+            if (!File.Exists(file))
+                return 0;
+
+            return new FileInfo(file).Length;
+        }
     }
 }

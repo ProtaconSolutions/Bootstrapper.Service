@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using NLog;
 
 namespace Bootstrapper.Service
@@ -6,17 +7,14 @@ namespace Bootstrapper.Service
     public class ServiceLoaderApp : IDisposable
     {
         private IDisposable _app;
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly IObservable<string> _watcher;
+        private readonly IDisposable _subscribe;
 
         public ServiceLoaderApp(Configuration configuration, ILogger logger)
         {
-            _watcher = new ServiceFolder(configuration)
+            var watcher = new ServiceFolder(configuration)
                 .ExecutablesChanged();
 
-            _app = null;
-
-            _watcher.Subscribe(path =>
+            _subscribe = watcher.Subscribe(path =>
                 {
                     logger.Info("Unloading exising application if any.");
                     _app?.Dispose();
@@ -30,6 +28,7 @@ namespace Bootstrapper.Service
 
         public void Dispose()
         {
+            _subscribe?.Dispose();
             _app?.Dispose();
         }
     }
