@@ -22,7 +22,7 @@ namespace Bootstrapper.Service
         {
             _watcher = new FileSystemWatcher
             {
-                Path = _configuration.ServicePath,
+                Path = _configuration.ServiceBinPath,
                 NotifyFilter = NotifyFilters.LastWrite,
                 EnableRaisingEvents = true
             };

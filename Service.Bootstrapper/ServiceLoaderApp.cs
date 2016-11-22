@@ -20,7 +20,7 @@ namespace Bootstrapper.Service
                     _app?.Dispose();
 
                     logger.Info($"Loading new application from '{path}'");
-                    _app = ShadowDomainApplication.StartApplication(path, startupLogger: logger);
+                    _app = new ProcessContainerApplication(path, logger, configuration);
                 },
                 onError: logger.Error,
                 onCompleted: () => _app?.Dispose());

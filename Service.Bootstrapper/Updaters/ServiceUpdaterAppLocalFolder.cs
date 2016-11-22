@@ -3,6 +3,7 @@ using System.IO;
 using System.Reactive.Linq;
 using NLog;
 using System.IO.Compression;
+using System.Reactive.Concurrency;
 using Bootstrapper.Service.Util;
 
 namespace Bootstrapper.Service.Updaters
@@ -10,18 +11,16 @@ namespace Bootstrapper.Service.Updaters
     public class ServiceUpdaterAppLocalFolder : IDisposable
     {
         private readonly ILogger _logger;
-
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly IObservable<long> _interval;
         private readonly IDisposable _routine;
 
         public ServiceUpdaterAppLocalFolder(Configuration configuration, ILogger logger)
         {
             _logger = logger;
 
-            _interval = Observable.Interval(TimeSpan.FromSeconds(30));
-
-            _routine = _interval.Subscribe(_ =>
+            _routine = Observable
+                .Interval(TimeSpan.FromSeconds(30))
+                .ObserveOn(Scheduler.Default)
+                .Subscribe(_ =>
             {
                 try
                 {
@@ -52,10 +51,10 @@ namespace Bootstrapper.Service.Updaters
                 $"New version found, replacing '{configuration.RemoteServicePackageFile}'->'{configuration.CurrentServicePackageFile}'");
             File.Copy(configuration.RemoteServicePackageFile, configuration.CurrentServicePackageFile);
 
-            _logger.Info($"Extracting package to '{configuration.ServicePath}'");
+            _logger.Info($"Extracting package to '{configuration.ServiceBinPath}'");
 
-            new DirectoryInfo(configuration.ServicePath).Empty();
-            ZipFile.ExtractToDirectory(configuration.CurrentServicePackageFile, configuration.ServicePath);
+            new DirectoryInfo(configuration.ServiceBinPath).Empty();
+            ZipFile.ExtractToDirectory(configuration.CurrentServicePackageFile, configuration.ServiceBinPath);
         }
 
         public void Dispose()

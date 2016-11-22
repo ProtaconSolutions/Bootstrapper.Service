@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Optional;
@@ -7,21 +8,25 @@ namespace Bootstrapper.Service
 {
     public class Configuration
     {
-        public string ServicePath { get; }
+        public string ServiceBinPath { get; }
         public string CurrentServicePackageFile { get; }
         public string RemoteServicePackageFile { get; }
         public string StartupFile { get; }
         public string BootstrapperLogPath { get; }
+        public string TempPath { get; }
 
         private Configuration()
         {
-            ServicePath = Path.Combine(Path.GetDirectoryName(
+            ServiceBinPath = Path.Combine(Path.GetDirectoryName(
                 Assembly.GetExecutingAssembly().Location), "serviceBin");
 
-            StartupFile = Path.Combine(ServicePath, "Baja.Client.Console.exe");
+            if (string.IsNullOrEmpty(Properties.Settings.Default.StartupFile))
+                throw new InvalidOperationException($"{nameof(Properties.Settings.Default.StartupFile)} configuration is missing from config file.");
 
-            if (!Directory.Exists(ServicePath))
-                Directory.CreateDirectory(ServicePath);
+            StartupFile = Path.Combine(ServiceBinPath, Properties.Settings.Default.StartupFile);
+
+            if (!Directory.Exists(ServiceBinPath))
+                Directory.CreateDirectory(ServiceBinPath);
 
             BootstrapperLogPath = Path.Combine(Path.GetDirectoryName(
                 Assembly.GetExecutingAssembly().Location), "log") + @"\bootstrapper_service.log";
@@ -33,9 +38,19 @@ namespace Bootstrapper.Service
                 Directory.CreateDirectory(servicePackageFolder);
 
             CurrentServicePackageFile = servicePackageFolder + @"\\current.zip";
-            RemoteServicePackageFile = @"https://savpekprotaconcommon.blob.core.windows.net/dev/consoleapplication1.zip";
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.RemoteServicePackageFile))
+                throw new InvalidOperationException($"{nameof(Properties.Settings.Default.RemoteServicePackageFile)} configuration is missing from config file.");
+
+            RemoteServicePackageFile = Properties.Settings.Default.RemoteServicePackageFile;
 
             WebUpdaterMetaFile = servicePackageFolder + @"\\web.updater.meta.json";
+
+            TempPath = Path.Combine(Path.GetDirectoryName(
+                Assembly.GetExecutingAssembly().Location), "temp");
+
+            if (!Directory.Exists(TempPath))
+                Directory.CreateDirectory(TempPath);
         }
 
         public string WebUpdaterMetaFile { get; private set; }
