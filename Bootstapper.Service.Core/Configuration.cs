@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Bootstrapper.Service.Util;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using Optional;
+using RestSharp;
 
 namespace Bootstrapper.Service
 {
@@ -17,40 +22,42 @@ namespace Bootstrapper.Service
 
         private Configuration()
         {
-            ServiceBinPath = Path.Combine(Path.GetDirectoryName(
-                Assembly.GetExecutingAssembly().Location), "serviceBin");
+            var startupLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).NotNull();
 
-            if (string.IsNullOrEmpty(Properties.Settings.Default.StartupFile))
-                throw new InvalidOperationException($"{nameof(Properties.Settings.Default.StartupFile)} configuration is missing from config file.");
+            var configFile = ReadConfigFile();
 
-            StartupFile = Path.Combine(ServiceBinPath, Properties.Settings.Default.StartupFile);
+            ServiceBinPath = Path.Combine(startupLocation, "serviceBin");
+
+            StartupFile = Path.Combine(ServiceBinPath, configFile.GetSection("StartupFile").Value.NotNull());
 
             if (!Directory.Exists(ServiceBinPath))
                 Directory.CreateDirectory(ServiceBinPath);
 
-            BootstrapperLogPath = Path.Combine(Path.GetDirectoryName(
-                Assembly.GetExecutingAssembly().Location), "log") + @"\bootstrapper_service.log";
+            BootstrapperLogPath = Path.Combine(startupLocation, "log") + @"\bootstrapper_service.log";
 
-            var servicePackageFolder = Path.Combine(Path.GetDirectoryName(
-                Assembly.GetExecutingAssembly().Location), "servicePackage");
+            var servicePackageFolder = Path.Combine(startupLocation, "servicePackage");
 
             if (!Directory.Exists(servicePackageFolder))
                 Directory.CreateDirectory(servicePackageFolder);
 
             CurrentServicePackageFile = servicePackageFolder + @"\\current.zip";
 
-            if (string.IsNullOrEmpty(Properties.Settings.Default.RemoteServicePackageFile))
-                throw new InvalidOperationException($"{nameof(Properties.Settings.Default.RemoteServicePackageFile)} configuration is missing from config file.");
-
-            RemoteServicePackageFile = Properties.Settings.Default.RemoteServicePackageFile;
+            RemoteServicePackageFile = configFile.GetSection("RemoteServicePackageFile").Value.NotNull();
 
             WebUpdaterMetaFile = servicePackageFolder + @"\\web.updater.meta.json";
 
-            TempPath = Path.Combine(Path.GetDirectoryName(
-                Assembly.GetExecutingAssembly().Location), "temp");
+            TempPath = Path.Combine(startupLocation, "temp");
 
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
+        }
+
+        private static IConfigurationRoot ReadConfigFile()
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("config.json")
+                .Build();
         }
 
         public string WebUpdaterMetaFile { get; private set; }

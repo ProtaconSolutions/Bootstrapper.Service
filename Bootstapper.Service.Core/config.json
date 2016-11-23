@@ -1,0 +1,4 @@
+﻿{
+  "StartupFile": "Baja.Client.Console.exe",
+  "RemoteServicePackageFile": "https://savpekprotaconcommon.blob.core.windows.net/dev/Example.App.zip"
+}

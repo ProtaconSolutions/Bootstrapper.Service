@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Threading;
+using System.Threading.Tasks;
+using Bootstrapper.Service;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Topshelf;
 
-namespace Bootstrapper.Service
+namespace Bootstapper.Service.Core
 {
-    class Program
+    public class Program
     {
         [LoaderOptimization(LoaderOptimization.MultiDomainHost)]
         [STAThread]

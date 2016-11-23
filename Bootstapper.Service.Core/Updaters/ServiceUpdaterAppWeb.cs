@@ -64,7 +64,7 @@ namespace Bootstrapper.Service.Updaters
                 _logger.Info($"Extracting package to '{configuration.ServiceBinPath}'");
 
                 new DirectoryInfo(configuration.ServiceBinPath).Empty();
-                ZipFile.ExtractToDirectory(configuration.CurrentServicePackageFile, configuration.ServiceBinPath);
+                //ZipFile.ExtractToDirectory(configuration.CurrentServicePackageFile, configuration.ServiceBinPath);
 
                 WriteCurrentVersionMeta(configuration, remoteVersion);
             },
