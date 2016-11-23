@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Example.Download.Bootstrapper.Service.Web.Controllers
 {
-    public class ValuesController : Controller
+    public class FileController : Controller
     {
         [HttpGet("/bootstrapperservice/")]
         public object Get(string configuredTargetFile)

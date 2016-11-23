@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Reactive.Linq;
 using NLog;
 
-namespace Bootstrapper.Service
+namespace Bootstapper.Service.Core
 {
     public class ServiceLoaderApp : IDisposable
     {
