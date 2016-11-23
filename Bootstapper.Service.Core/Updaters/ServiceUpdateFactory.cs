@@ -1,7 +1,7 @@
 ﻿using System;
 using NLog;
 
-namespace Bootstrapper.Service.Updaters
+namespace Bootstapper.Service.Core.Updaters
 {
     public class ServiceUpdateFactory
     {

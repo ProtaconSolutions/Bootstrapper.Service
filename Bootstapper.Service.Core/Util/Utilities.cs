@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Bootstrapper.Service.Util
+namespace Bootstapper.Service.Core.Util
 {
     public static class Utilities
     {

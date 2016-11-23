@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Bootstrapper.Service.Util;
+using Bootstapper.Service.Core.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -13,7 +13,7 @@ using Optional;
 using RestSharp;
 using RestSharp.Extensions;
 
-namespace Bootstrapper.Service.Updaters
+namespace Bootstapper.Service.Core.Updaters
 {
     public class ServiceUpdaterAppWeb : IDisposable
     {

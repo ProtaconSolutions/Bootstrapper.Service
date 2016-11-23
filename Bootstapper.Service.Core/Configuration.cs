@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using Bootstrapper.Service.Util;
+using Bootstapper.Service.Core.Util;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using Optional;
-using RestSharp;
 
-namespace Bootstrapper.Service
+namespace Bootstapper.Service.Core
 {
     public class Configuration
     {

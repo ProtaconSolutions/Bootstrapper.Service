@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 
-namespace Bootstrapper.Service
+namespace Bootstapper.Service.Core
 {
     public class ProcessContainerApplication : IDisposable
     {

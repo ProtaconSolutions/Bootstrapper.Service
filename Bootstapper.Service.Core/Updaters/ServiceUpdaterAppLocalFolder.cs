@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Reactive.Linq;
-using NLog;
 using System.IO.Compression;
 using System.Reactive.Concurrency;
-using Bootstrapper.Service.Util;
+using System.Reactive.Linq;
+using Bootstapper.Service.Core.Util;
+using NLog;
 
-namespace Bootstrapper.Service.Updaters
+namespace Bootstapper.Service.Core.Updaters
 {
     public class ServiceUpdaterAppLocalFolder : IDisposable
     {

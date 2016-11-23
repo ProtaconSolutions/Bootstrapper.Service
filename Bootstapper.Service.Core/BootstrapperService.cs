@@ -1,8 +1,8 @@
 ﻿using System;
-using Bootstrapper.Service.Updaters;
+using Bootstapper.Service.Core.Updaters;
 using NLog;
 
-namespace Bootstrapper.Service
+namespace Bootstapper.Service.Core
 {
     public class BootstrapperService
     {
