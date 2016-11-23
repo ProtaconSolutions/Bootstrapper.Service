@@ -172,12 +172,10 @@
     </Compile>
     <Compile Include="ServiceFolder.cs" />
     <Compile Include="ServiceLoaderApp.cs" />
-    <Compile Include="Tester.cs" />
     <Compile Include="Updaters\ServiceUpdateFactory.cs" />
     <Compile Include="Updaters\ServiceUpdaterAppLocalFolder.cs" />
     <Compile Include="Updaters\ServiceUpdaterAppWeb.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="ShadowDomainApplication.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\Utilities.cs" />
   </ItemGroup>
@@ -188,7 +186,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
@@ -13,8 +10,8 @@ namespace Bootstrapper.Service
     public class ProcessContainerApplication : IDisposable
     {
         private readonly ILogger _startupLogger;
-        private string _currentProcessFolder;
-        private Process _process;
+        private readonly string _currentProcessFolder;
+        private readonly Process _process;
 
         public ProcessContainerApplication(string startupFile, ILogger startupLogger, Configuration config)
         {
@@ -43,6 +40,7 @@ namespace Bootstrapper.Service
             var shadowExePath = _currentProcessFolder + "\\" + Path.GetFileName(startupFile);
 
             startupLogger.Debug($"Starting executable from '{shadowExePath}'.");
+
             _process = Process.Start(shadowExePath);
         }
 
@@ -58,6 +56,9 @@ namespace Bootstrapper.Service
         {
             Task.Run(() =>
             {
+                if (_process == null)
+                    return;
+
                 _startupLogger.Debug($"Killing application from '{_currentProcessFolder}'");
                 _process.Kill();
 
