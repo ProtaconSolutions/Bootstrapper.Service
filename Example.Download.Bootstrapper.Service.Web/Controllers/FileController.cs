@@ -38,7 +38,7 @@ namespace Example.Download.Bootstrapper.Service.Web.Controllers
                     writer.Write(JsonConvert.SerializeObject(currentConfig));
             }
 
-            return File(System.IO.File.ReadAllBytes(zipFilePath), System.Net.Mime.MediaTypeNames.Application.Octet, "bootstrapperservice.zip");
+            return File(System.IO.File.ReadAllBytes(zipFilePath), "application/octet-stream", "bootstrapperservice.zip");
         }
     }
 }
