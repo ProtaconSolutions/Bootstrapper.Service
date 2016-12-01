@@ -29,8 +29,10 @@ namespace Example.Download.Bootstrapper.Service.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(LogLevel.Debug);
             loggerFactory.AddDebug();
             app.UseMvc();
+            app.UseStaticFiles();
         }
     }
 }
