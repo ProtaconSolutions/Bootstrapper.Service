@@ -9,5 +9,5 @@ Create publishable docker image of web server where this service can be download
 
 docker run -p 5000:5000 -it mystuff/bootstrapper-service:v1.0.0
 
-Invoke-WebRequest "http://localhost:5000/bootstrapperservice/?startupFile=console1.exe&remoteServicePackageFile=http://sourcefileserverforpackage.fi/package.zip" 
+Invoke-WebRequest "http://localhost:5000/bootstrapperservice/?startupFile=console1.exe&remoteServicePackageFile=http://sourcefileserver.fi/yourownservice.zip" 
 ```
