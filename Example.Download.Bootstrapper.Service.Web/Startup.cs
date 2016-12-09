@@ -31,7 +31,11 @@ namespace Example.Download.Bootstrapper.Service.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddConsole(LogLevel.Debug);
             loggerFactory.AddDebug();
+
             app.UseMvc();
+
+            app.UseDefaultFiles();
+
             app.UseStaticFiles();
         }
     }
