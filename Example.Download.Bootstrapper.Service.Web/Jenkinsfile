@@ -1,0 +1,5 @@
+node {
+    stage('Build') {
+        sh ./build.docker.sh testi
+    }
+}

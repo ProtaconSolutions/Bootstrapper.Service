@@ -1,0 +1,5 @@
+FROM microsoft/dotnet
+ADD ./ /var/download.bootstrapper.service/
+WORKDIR /var/download.bootstrapper.service/
+RUN dotnet restore
+RUN dotnet publish -o dist
