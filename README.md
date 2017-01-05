@@ -1,5 +1,5 @@
 # Service bootstrapper
-Problem: Customer own computer requires running service on it with self update support. This isn't service logig itself but bootstrapper
+Problem: Customer own computer requires running service on it with self update support. This isn't service logic itself but bootstrapper
 for service executable which is downloaded and updated automatically from internet.
 
 ```
