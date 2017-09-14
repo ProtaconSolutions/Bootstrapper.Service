@@ -19,6 +19,7 @@ Bootstrapper is configured in config.json file.
   "StartupFile": "Baja.Client.Application.exe",
   "StartupFileArguments": "--LogPath={startupLocation}\\log\\",
   "RemoteServicePackageFile": "http://localhost:5000/bootstrapperservice",
+  "UpdaterInterval": 30,
   "RemoteServiceHeaders": {
     "Version": "1.0",
 	"CustomHeader": "Value"
@@ -28,10 +29,11 @@ Bootstrapper is configured in config.json file.
 
 | Attribute | Description |
 | --- | --- |
-| `StartupFile`             	| Executable file which bootstrapper starts |
-| `StartupFileArguments`      	| Arguments for the startup file. `{startupLocation}` is the base directory for the bootstrapper. |
-| `RemoteServicePackageFile` 	| Remote server address where service version is fetched. Remote server must return version number with GET request. Bootstrapper downloads service from same endpoint by adding /"version" to end of url. |
-| `RemoteServiceHeaders` 		| Extra headers used with remote calls. |
+| `StartupFile`                 | Executable file which bootstrapper starts |
+| `StartupFileArguments`        | Arguments for the startup file. `{startupLocation}` is the base directory for the bootstrapper. |
+| `RemoteServicePackageFile`    | Remote server address where service version is fetched. Remote server must return version number with GET request. Bootstrapper downloads service from same endpoint by adding /"version" to end of url. |
+| `UpdaterInterval`             | Interval in seconds how often bootstrapper tries to update service. |
+| `RemoteServiceHeaders`        | Extra headers used with remote calls. |
 
 
 

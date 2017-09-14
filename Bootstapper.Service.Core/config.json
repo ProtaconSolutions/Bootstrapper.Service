@@ -2,6 +2,7 @@
   "StartupFile": "ConsoleApp.exe",
   "StartupFileArguments": "--startupLocation={startupLocation}",
   "RemoteServicePackageFile": "http://localhost:5000/bootstrapperservice",
+  "UpdaterInterval": 30,
   "RemoteServiceHeaders": {
     "Version": "1.0"
   }

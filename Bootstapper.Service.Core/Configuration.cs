@@ -20,6 +20,7 @@ namespace Bootstapper.Service.Core
         public string TempPath { get; }
         public string WebUpdaterMetaFile { get; }
         public Dictionary<string, string> RemoteServiceHeaders { get; }
+        public double UpdaterInterval { get; }
 
         private Configuration()
         {
@@ -49,6 +50,7 @@ namespace Bootstapper.Service.Core
 
             CurrentServicePackageFile = servicePackageFolder + @"\\current.zip";
 
+            UpdaterInterval = double.Parse(configFile.GetSection("UpdaterInterval").Value.NotNull());
             RemoteServicePackageFile = configFile.GetSection("RemoteServicePackageFile").Value.NotNull();
             RemoteServiceHeaders = configFile.GetSection("RemoteServiceHeaders").GetChildren()
                 .ToDictionary(m => m.Key, m => m.Value);

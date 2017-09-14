@@ -23,7 +23,7 @@ namespace Bootstapper.Service.Core.Updaters
         {
             _logger = logger;
             _routine = Observable
-                .Interval(TimeSpan.FromSeconds(30))
+                .Interval(TimeSpan.FromSeconds(configuration.UpdaterInterval))
                 .ObserveOn(Scheduler.Default)
                 .Subscribe(_ =>
             {
