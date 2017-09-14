@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using NLog;
 
 namespace Bootstapper.Service.Core
@@ -39,9 +38,9 @@ namespace Bootstapper.Service.Core
 
             var shadowExePath = _currentProcessFolder + "\\" + Path.GetFileName(startupFile);
 
-            startupLogger.Debug($"Starting executable from '{shadowExePath}'.");
+            startupLogger.Debug($"Starting executable from '{shadowExePath}' with arguments '{config.StartupFileArguments}'.");
 
-            _process = Process.Start(shadowExePath);
+            _process = Process.Start(shadowExePath, config.StartupFileArguments);
         }
 
         private static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
@@ -54,18 +53,22 @@ namespace Bootstapper.Service.Core
 
         public void Dispose()
         {
-            Task.Run(() =>
-            {
-                if (_process == null)
-                    return;
+            if (_process == null)
+                return;
 
+            try
+            {
                 _startupLogger.Debug($"Killing application from '{_currentProcessFolder}'");
                 _process.Kill();
 
-                Thread.Sleep(10*1000);
+                Thread.Sleep(10 * 1000);
                 _startupLogger.Debug($"Deleting old data from '{_currentProcessFolder}'");
                 Directory.Delete(_currentProcessFolder, true);
-            });
+            }
+            catch (Exception e)
+            {
+                _startupLogger.Error(e, $"Failed disposing old process '{_currentProcessFolder}'");
+            }
         }
     }
 }

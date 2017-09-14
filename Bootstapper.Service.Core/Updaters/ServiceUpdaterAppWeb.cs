@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -38,6 +37,12 @@ namespace Bootstapper.Service.Core.Updaters
                 }
             });
         }
+
+        public void Dispose()
+        {
+            _routine.Dispose();
+        }
+
         private void UpdateServiceBinariesRoutine(Configuration configuration)
         {
             if (!configuration.RemoteServicePackageFile.StartsWith("http"))
@@ -57,9 +62,9 @@ namespace Bootstapper.Service.Core.Updaters
                     File.Delete(configuration.CurrentServicePackageFile);
 
                 _logger.Info(
-                    $"New version found, replacing '{configuration.RemoteServicePackageFile}'->'{configuration.CurrentServicePackageFile}'");
+                    $"New version found {remoteVersion}, replacing '{configuration.RemoteServicePackageFile}'->'{configuration.CurrentServicePackageFile}'");
 
-                DownloadNewPackage(configuration);
+                DownloadNewPackage(configuration, remoteVersion);
 
                 _logger.Info($"Extracting package to '{configuration.ServiceBinPath}'");
 
@@ -79,22 +84,22 @@ namespace Bootstapper.Service.Core.Updaters
             }));
         }
 
-        private void DownloadNewPackage(Configuration configuration)
+        private void DownloadNewPackage(Configuration configuration, string version)
         {
             var client = new RestClient(configuration.RemoteServicePackageFile);
-            client.DownloadData(new RestRequest("")).SaveAs(configuration.CurrentServicePackageFile);
+            client.DownloadData(GetRequest(version, Method.GET, configuration)).SaveAs(configuration.CurrentServicePackageFile);
         }
 
         private Option<string, string> GetRemoteVersionIdentifier(Configuration configuration)
         {
             var response = new RestClient(configuration.RemoteServicePackageFile)
-                .Execute(new RestRequest("", Method.HEAD));
+                .Execute(GetRequest("", Method.GET, configuration));
 
             if (response.StatusCode != HttpStatusCode.OK)
                 return Option
                     .None<string, string>($"Cannot locate remote package '{configuration.RemoteServicePackageFile}', return code '{response.StatusCode}'");
 
-            return $"{response.Headers.Single(x => x.Name == "Content-Length").Value}_{response.Headers.Single(x => x.Name == "Last-Modified").Value}"
+            return response.Content
                 .Some<string, string>();
         }
 
@@ -108,9 +113,16 @@ namespace Bootstapper.Service.Core.Updaters
             return meta.CurrentVersionIdentifier ?? "";
         }
 
-        public void Dispose()
+        private static RestRequest GetRequest(string resource, Method method, Configuration configuration)
         {
-            _routine.Dispose();
+            var request = new RestRequest(resource, method);
+
+            foreach (var header in configuration.RemoteServiceHeaders)
+            {
+                request.AddHeader(header.Key, header.Value);
+            }
+
+            return request;
         }
     }
 }

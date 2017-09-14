@@ -1,4 +1,8 @@
 ﻿{
-  "StartupFile": "Baja.Client.Console.exe",
-  "RemoteServicePackageFile": "https://savpekprotaconcommon.blob.core.windows.net/dev/Example.App.zip"
+  "StartupFile": "ConsoleApp.exe",
+  "StartupFileArguments": "--startupLocation={startupLocation}",
+  "RemoteServicePackageFile": "http://localhost:5000/bootstrapperservice",
+  "RemoteServiceHeaders": {
+    "Version": "1.0"
+  }
 }

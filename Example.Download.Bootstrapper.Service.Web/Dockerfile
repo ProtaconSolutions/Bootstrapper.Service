@@ -1,6 +1,6 @@
-FROM microsoft/dotnet:1.0-runtime
+FROM microsoft/dotnet:2.0-runtime
 
-COPY bin/release/netcoreapp1.0/publish/ /root/
+COPY bin/release/netcoreapp2.0/publish/ /root/
 EXPOSE 5000
 
 WORKDIR /root/

@@ -10,7 +10,13 @@ namespace Example.Download.Bootstrapper.Service.Web.Controllers
     public class FileController : Controller
     {
         [HttpGet("/bootstrapperservice/")]
-        public FileResult Get([FromQuery]string startupFile, [FromQuery]string remoteServicePackageFile)
+        public string Get()
+        {
+            return "1.0";
+        }
+
+        [HttpGet("/bootstrapperservice/{version}")]
+        public FileResult Get(string version)
         {
             string zipFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Package", "current.zip");
 
@@ -27,8 +33,7 @@ namespace Example.Download.Bootstrapper.Service.Web.Controllers
                     currentConfig = JObject.Parse(reader.ReadToEnd());
                 }
 
-                currentConfig["StartupFile"] = startupFile;
-                currentConfig["RemoteServicePackageFile"] = remoteServicePackageFile;
+                currentConfig["Test"] = "Value";
 
                 configEntry.Delete();
 

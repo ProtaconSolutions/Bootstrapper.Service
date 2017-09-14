@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using NLog;
 using NLog.Config;
+using NLog.Layouts;
 using NLog.Targets;
 using Topshelf;
 
@@ -34,9 +32,13 @@ namespace Bootstapper.Service.Core
             var consoleTarget = new ColoredConsoleTarget();
             loggerConfig.AddTarget("console", new ColoredConsoleTarget());
 
-            var fileTarget = new FileTarget()
+            var fileTarget = new FileTarget
             {
-                FileName = config.BootstrapperLogPath
+                FileName = config.BootstrapperLogPath,
+                MaxArchiveFiles = 30,
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                Layout = Layout.FromString("${longdate}|${logger}|${uppercase:${level}}|${message} ${exception:format=toString,Data}")
             };
 
             loggerConfig.AddTarget("file", fileTarget);

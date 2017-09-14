@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Example.Download.Bootstrapper.Service.Web", "Example.Download.Bootstrapper.Service.Web\Example.Download.Bootstrapper.Service.Web.xproj", "{699E5F74-CFFA-499A-8EE0-2EFE34078F50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Download.Bootstrapper.Service.Web", "Example.Download.Bootstrapper.Service.Web\Example.Download.Bootstrapper.Service.Web.csproj", "{699E5F74-CFFA-499A-8EE0-2EFE34078F50}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bootstapper.Service.Core", "Bootstapper.Service.Core\Bootstapper.Service.Core.xproj", "{BA398F8D-BA15-437E-A8D7-45BB772ADB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bootstapper.Service.Core", "Bootstapper.Service.Core\Bootstapper.Service.Core.csproj", "{BA398F8D-BA15-437E-A8D7-45BB772ADB91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {044837C2-23F8-4DCF-8AB2-0684B2D1B5E7}
 	EndGlobalSection
 EndGlobal
