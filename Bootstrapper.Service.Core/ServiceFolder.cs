@@ -4,7 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace Bootstapper.Service.Core
+namespace Bootstrapper.Service.Core
 {
     public class ServiceFolder : IDisposable
     {

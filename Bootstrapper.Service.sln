@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Download.Bootstrapper.Service.Web", "Example.Download.Bootstrapper.Service.Web\Example.Download.Bootstrapper.Service.Web.csproj", "{699E5F74-CFFA-499A-8EE0-2EFE34078F50}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bootstapper.Service.Core", "Bootstapper.Service.Core\Bootstapper.Service.Core.csproj", "{BA398F8D-BA15-437E-A8D7-45BB772ADB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bootstrapper.Service.Core", "Bootstrapper.Service.Core\Bootstrapper.Service.Core.csproj", "{BA398F8D-BA15-437E-A8D7-45BB772ADB91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

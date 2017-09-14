@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using NLog;
 
-namespace Bootstapper.Service.Core
+namespace Bootstrapper.Service.Core
 {
     public class ProcessContainerApplication : IDisposable
     {

@@ -4,7 +4,7 @@
     <TargetFramework>net461</TargetFramework>
     <AssemblyName>Bootstapper.Service.Core</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Bootstapper.Service.Core</PackageId>
+    <PackageId>Bootstrapper.Service.Core</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

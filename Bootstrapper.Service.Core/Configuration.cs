@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Bootstapper.Service.Core.Util;
+using Bootstrapper.Service.Core.Util;
 using Microsoft.Extensions.Configuration;
 using Optional;
 
-namespace Bootstapper.Service.Core
+namespace Bootstrapper.Service.Core
 {
     public class Configuration
     {

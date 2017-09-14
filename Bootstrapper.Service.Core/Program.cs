@@ -7,7 +7,7 @@ using NLog.Layouts;
 using NLog.Targets;
 using Topshelf;
 
-namespace Bootstapper.Service.Core
+namespace Bootstrapper.Service.Core
 {
     public class Program
     {

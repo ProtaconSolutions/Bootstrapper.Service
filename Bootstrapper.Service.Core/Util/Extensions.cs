@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
-namespace Bootstapper.Service.Core.Util
+namespace Bootstrapper.Service.Core.Util
 {
     public static class Extensions
     {
