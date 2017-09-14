@@ -9,5 +9,29 @@ Create publishable docker image of web server where this service can be download
 
 docker run -p 5000:5000 -it mystuff/bootstrapper-service:v1.0.0
 
-Invoke-WebRequest "http://localhost:5000/bootstrapperservice/?startupFile=console1.exe&remoteServicePackageFile=http://sourcefileserver.fi/yourownservice.zip" 
+Invoke-WebRequest "http://localhost:5000/bootstrapperservicecore/?startupFile=console1.exe&remoteServicePackageFile=http://sourcefileserver.fi/yourownservice" 
 ```
+
+## Bootstrapper configuration
+Bootstrapper is configured in config.json file.
+```javascript
+{
+  "StartupFile": "Baja.Client.Application.exe",
+  "StartupFileArguments": "--LogPath={startupLocation}\\log\\",
+  "RemoteServicePackageFile": "http://localhost:5000/bootstrapperservice",
+  "RemoteServiceHeaders": {
+    "Version": "1.0",
+	"CustomHeader": "Value"
+  }
+}
+```
+
+| Attribute | Description |
+| --- | --- |
+| `StartupFile`             	| Executable file which bootstrapper starts |
+| `StartupFileArguments`      	| Arguments for the startup file. `{startupLocation}` is the base directory for the bootstrapper. |
+| `RemoteServicePackageFile` 	| Remote server address where service version is fetched. Remote server must return version number with GET request. Bootstrapper downloads service from same endpoint by adding /"version" to end of url. |
+| `RemoteServiceHeaders` 		| Extra headers used with remote calls. |
+
+
+
