@@ -1,4 +1,5 @@
 ﻿{
+  "ServiceName": "Bootstrapper.Service",
   "StartupFile": "ConsoleApp.exe",
   "StartupFileArguments": "--startupLocation={startupLocation}",
   "RemoteServicePackageFile": "http://localhost:5000/bootstrapperservice",

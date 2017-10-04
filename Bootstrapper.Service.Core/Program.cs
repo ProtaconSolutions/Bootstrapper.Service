@@ -55,13 +55,13 @@ namespace Bootstrapper.Service.Core
         {
             NlogConfiguration(config);
 
-            var logger = LogManager.GetLogger("Bootstrapper.Service");
+            var logger = LogManager.GetLogger(config.ServiceName);
 
             HostFactory.Run(serviceConfig =>
             {
                 serviceConfig.UseNLog(logger.Factory);
 
-                serviceConfig.SetServiceName("Bootstrapper.Service");
+                serviceConfig.SetServiceName(config.ServiceName);
 
                 serviceConfig.Service<BootstrapperService>(service =>
                 {

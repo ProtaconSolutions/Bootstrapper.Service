@@ -11,6 +11,7 @@ namespace Bootstrapper.Service.Core
 {
     public class Configuration
     {
+        public string ServiceName { get; }
         public string ServiceBinPath { get; }
         public string CurrentServicePackageFile { get; }
         public string RemoteServicePackageFile { get; }
@@ -31,6 +32,7 @@ namespace Bootstrapper.Service.Core
             ServiceBinPath = Path.Combine(startupLocation, "serviceBin");
 
             StartupFile = Path.Combine(ServiceBinPath, configFile.GetSection("StartupFile").Value.NotNull());
+            ServiceName = configFile.GetSection("ServiceName").Value.NotNull();
             StartupFileArguments = configFile.GetSection("StartupFileArguments").Value;
 
             if (!string.IsNullOrEmpty(StartupFileArguments))
