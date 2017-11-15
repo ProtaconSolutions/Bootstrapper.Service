@@ -19,6 +19,7 @@ namespace Bootstrapper.Service.Core
 
         public void Start()
         {
+            _logger.Info("Service starting.");
             _currentApp?.Dispose();
             _updaterApp?.Dispose();
             _currentApp = new ServiceLoaderApp(_configuration, _logger);
@@ -27,12 +28,14 @@ namespace Bootstrapper.Service.Core
 
         public void Stop()
         {
+            _logger.Info("Service stopping.");
             _currentApp?.Dispose();
             _updaterApp?.Dispose();
         }
 
         public void ShutDown()
         {
+            _logger.Info("Service shutting down.");
             _currentApp?.Dispose();
             _updaterApp?.Dispose();
         }

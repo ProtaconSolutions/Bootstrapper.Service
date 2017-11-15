@@ -53,6 +53,8 @@ namespace Bootstrapper.Service.Core
 
         public void Dispose()
         {
+            _startupLogger.Debug("Disposing application.");
+
             if (_process == null)
                 return;
 

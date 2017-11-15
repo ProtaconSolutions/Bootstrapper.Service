@@ -7,9 +7,12 @@ namespace Bootstrapper.Service.Core
     {
         private IDisposable _app;
         private readonly IDisposable _subscribe;
+        private readonly ILogger _logger;
 
         public ServiceLoaderApp(Configuration configuration, ILogger logger)
         {
+            _logger = logger;
+
             var watcher = new ServiceFolder(configuration)
                 .ExecutablesChanged();
 
@@ -22,11 +25,16 @@ namespace Bootstrapper.Service.Core
                     _app = new ProcessContainerApplication(path, logger, configuration);
                 },
                 onError: logger.Error,
-                onCompleted: () => _app?.Dispose());
+                onCompleted: () =>
+                {
+                    _logger.Info("Service loader completed.");
+                    _app?.Dispose();
+                });
         }
 
         public void Dispose()
         {
+            _logger.Info("Disposing service loader.");
             _subscribe?.Dispose();
             _app?.Dispose();
         }
